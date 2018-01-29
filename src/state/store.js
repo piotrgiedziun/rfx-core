@@ -5,11 +5,12 @@ import _ from 'lodash';
 class Store {
 
   $stores = {};
-
   $imports = {};
+  $initialState = {}
 
-  setup(imports) {
+  setup(imports, initialState) {
     this.$imports = imports;
+    this.$initialState = initialState;
     return this;
   }
 
@@ -37,7 +38,7 @@ class Store {
     Object.keys(this.$imports)
       .forEach((key) => {
         const StoreClass = this.$imports[key];
-        const $state = state[key] || {};
+        const $state = Object.assign(state[key] || {}, this.$initialState[key] || {});
         const $obj = new StoreClass($state);
         const $extend = $obj.___extend || null;
         Object.assign($obj, $state);
